@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OilyDex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ░░ UPLOAD SCREEN ░░ -->
+  <div id="uploadScreen" class="screen screen--upload active">
+    <div class="upload-bg-grid"></div>
+    <div class="upload-center">
+      <div class="logo-lockup">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a10 10 0 0 1 0 20"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2c2.5 2.5 4 6 4 10s-1.5 7.5-4 10"/>
+          </svg>
+        </div>
+        <span class="logo-text">OilyDex</span>
+      </div>
+
+      <h1 class="hero-title">Your Countryballs<br><mark>Inventory</mark></h1>
+      <p class="hero-sub">Drop your CSV or ZIP export — everything runs in your browser, so it works great on Cloudflare Pages.</p>
+
+      <label class="drop-zone" id="dropZone" for="csvInput">
+        <input id="csvInput" name="csv_file" type="file" accept=".csv,.zip,text/csv,application/zip" required>
+        <div class="drop-inner">
+          <div class="drop-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p class="drop-label">Click to upload or drag & drop</p>
+          <p class="drop-types">.csv or .zip · max 30 MB</p>
+        </div>
+      </label>
+
+      <div id="uploadStatus" class="upload-status"></div>
+
+      <button id="backToDashboardBtn" class="btn-back hidden" type="button">
+        ← Back to dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- ░░ DASHBOARD SCREEN ░░ -->
+  <div id="dashboardScreen" class="screen screen--dashboard">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <button class="topbar-logo" id="newUploadBtn" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a10 10 0 0 1 0 20"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2c2.5 2.5 4 6 4 10s-1.5 7.5-4 10"/>
+          </svg>
+          OilyDex
+        </button>
+
+        <nav class="page-nav">
+          <button class="page-nav-btn active" data-page="collection">Collection</button>
+          <button class="page-nav-btn" data-page="raws">Raws</button>
+          <button class="page-nav-btn" data-page="bulk">Bulk Values</button>
+        </nav>
+
+        <button class="topbar-upload" id="newUploadBtnAlt" type="button">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          New file
+        </button>
+      </div>
+    </header>
+
+    <!-- ░░ COLLECTION PAGE ░░ -->
+    <div id="pageCollection" class="page-content active">
+      <div class="dash-body">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <p class="sidebar-label">Categories</p>
+          <nav id="categoryNav" class="cat-nav"></nav>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+          <div class="controls">
+            <div class="search-wrap">
+              <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input id="searchInput" class="search-input" placeholder="Search balls…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="filter-group">
+              <select id="sortSelect">
+                <option value="countDesc">Most owned</option>
+                <option value="category">Default order</option>
+                <option value="name">Name A–Z</option>
+                <option value="countAsc">Fewest owned</option>
+              </select>
+              <select id="demandSelect">
+                <option value="all">All demand</option>
+              </select>
+              <select id="viewSelect">
+                <option value="all">All balls</option>
+                <option value="owned">Owned only</option>
+                <option value="missing">Missing only</option>
+              </select>
+              <button id="resetBtn" class="btn-reset" type="button">Reset</button>
+            </div>
+          </div>
+
+          <div id="view" class="view"></div>
+          <p id="footer" class="footer-note"></p>
+        </main>
+      </div>
+    </div>
+
+    <!-- ░░ RAWS PAGE ░░ -->
+    <div id="pageRaws" class="page-content">
+      <div class="dash-body dash-body--single">
+        <main class="main">
+          <div class="section-head">
+            <h2>Raws Calculator</h2>
+          </div>
+          <p class="page-desc">Calculate the raw T1 value of your T1–T30 balls based on your collection.</p>
+          <div id="rawsView"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ░░ BULK VALUES PAGE ░░ -->
+    <div id="pageBulk" class="page-content">
+      <div class="dash-body dash-body--single">
+        <main class="main">
+          <div class="section-head">
+            <h2>Bulk Values</h2>
+          </div>
+          <p class="page-desc">Enter a ball, quantity and target to calculate its equivalent bulk value.</p>
+
+          <div class="bulk-calculator">
+            <div class="bulk-inputs">
+              <div class="bulk-field">
+                <label class="bulk-label">Ball name</label>
+                <input id="bulkBallInput" class="bulk-input" type="text" placeholder="e.g. France" autocomplete="off" spellcheck="false">
+                <div id="bulkBallSuggest" class="ball-suggest"></div>
+              </div>
+              <div class="bulk-field">
+                <label class="bulk-label">Amount</label>
+                <input id="bulkAmountInput" class="bulk-input" type="number" min="1" placeholder="e.g. 100">
+              </div>
+              <div class="bulk-field">
+                <label class="bulk-label">Convert to</label>
+                <select id="bulkTargetSelect" class="bulk-input">
+                  <option value="raws">T1 Raws</option>
+                  <option value="t4">T4 (value 4)</option>
+                  <option value="t5">T5 (value 5)</option>
+                  <option value="t7">T7 (value 7)</option>
+                  <option value="t9">T9 (value 9)</option>
+                  <option value="t10">T10 (value 10)</option>
+                </select>
+              </div>
+              <button id="bulkCalcBtn" class="bulk-calc-btn" type="button">Calculate</button>
+            </div>
+
+            <div id="bulkResult" class="bulk-result hidden"></div>
+          </div>
+
+          <div class="bulk-table-section">
+            <div class="section-head" style="margin-top:28px;">
+              <h2>Hal's Rate Reference</h2>
+              <span class="count-badge">Bulk rates table</span>
+            </div>
+            <p class="page-desc">Standard bulk rates for trading. Shows how many balls of each rarity are worth X raws at different Hal's rates.</p>
+            <div id="halsTable" class="hals-table-wrap"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile sidebar toggle — only shown on collection page on mobile -->
+  <button id="sidebarToggle" class="sidebar-toggle hidden" type="button" aria-label="Toggle categories">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <!-- Scroll top -->
+  <button id="scrollTopBtn" class="scroll-top hidden" type="button" aria-label="Scroll to top">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <script src="data/values.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
